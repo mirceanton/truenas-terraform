@@ -1,0 +1,41 @@
+{% if mode == "apply" %}
+## {{ "✅" if env.APPLY_STATUS == "success" else "❌" }} Terragrunt Apply Results
+
+> Workflow run [#{{ env.RUN_NUMBER }}]({{ env.RUN_URL }})
+
+{% elif mode == "drift" %}
+## ⚠️ Drift detected in workflow run [#{{ env.RUN_NUMBER }}]({{ env.RUN_URL }})
+
+{% else %}
+## 🤖 Terragrunt Plan Results
+
+{% endif %}
+{% if not units %}
+```
+{{ raw_output }}
+```
+{% else %}
+| Unit | Status | +Add | ~Change | -Destroy |
+|------|:------:|-----:|--------:|---------:|
+{% for unit in units %}
+| `{{ unit.display_name }}` | {{ unit.status }} | {{ unit.add }} | {{ unit.change }} | {{ unit.destroy }} |
+{% endfor %}
+
+{% for unit in units %}
+{% if unit.status != "✅" %}
+### `{{ unit.display_name }}`
+
+{{ unit.status_line }}
+
+<details>
+<summary>{{ "Apply" if mode == "apply" else "Plan" }} output</summary>
+
+```hcl
+{{ unit.output }}
+```
+
+</details>
+
+{% endif %}
+{% endfor %}
+{% endif %}

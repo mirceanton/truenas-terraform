@@ -1,0 +1,23 @@
+---
+version: "3"
+
+tasks:
+  default:
+    desc: Run all linters.
+    alias: ["fix", "all"]
+    cmds:
+      - task: actions
+      - task: yaml
+      - task: terragrunt
+
+  check:
+    desc: Check all files for linting issues without modifying them
+    cmds:
+      - task: actions
+      - task lint:yaml -- -lint
+      - task: terragrunt
+
+  actions: actionlint {{.CLI_ARGS}}
+  yaml: yamlfmt {{.CLI_ARGS}} **/*.yaml
+  terragrunt: terragrunt hcl format
+
