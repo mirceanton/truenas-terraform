@@ -17,7 +17,7 @@ services:
         expose:
             - "3900"
             - "3903"
-        image: dxflrs/garage:v2.2.0
+        image: dxflrs/garage:v2.3.0
         labels:
             - traefik.enable=true
             - traefik.http.routers.garage-s3.rule=Host(`garage-s3.nas.svc.h.mirceanton.com`) || HostRegexp(`{subdomain:.+}.garage-s3.nas.svc.h.mirceanton.com`)
