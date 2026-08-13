@@ -12,6 +12,7 @@ on:
     paths:
       - root.hcl
       - infrastructure/**
+      - terraform/**
 
 jobs:
   terragrunt-plan:

@@ -10,6 +10,7 @@ on:
     paths:
       - root.hcl
       - infrastructure/**
+      - terraform/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
