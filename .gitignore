@@ -1,4 +1,29 @@
-.terraform/
-.terragrunt-cache/
+# OpenTofu / Terraform
+**/.terraform/*
+**/.terragrunt-cache/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
 backend.tf
+
+# direnv
 .envrc
+
+# Local secrets (op:// reference files like .env.1pass are safe to commit)
+.env
+.env.local
+
+# Stray key material
+*.pem
+id_rsa*
+id_ed25519*
+
+# OS
+.DS_Store
