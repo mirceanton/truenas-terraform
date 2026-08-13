@@ -38,11 +38,6 @@ resource "truenas_cloudsync_task" "users_mircea" {
   }
 }
 
-import {
-  to = truenas_cloudsync_task.users_mircea
-  id = "10"
-}
-
 resource "truenas_cloudsync_task" "users_bianca" {
   description   = "B2 - Users - Bianca"
   path          = "/mnt/tank/Users/bianca"
@@ -69,11 +64,6 @@ resource "truenas_cloudsync_task" "users_bianca" {
     password = var.b2_backup_encryption_password
     salt     = var.b2_backup_encryption_salt
   }
-}
-
-import {
-  to = truenas_cloudsync_task.users_bianca
-  id = "11"
 }
 
 resource "truenas_cloudsync_task" "projects_mirceanton" {
@@ -104,11 +94,6 @@ resource "truenas_cloudsync_task" "projects_mirceanton" {
   }
 }
 
-import {
-  to = truenas_cloudsync_task.projects_mirceanton
-  id = "12"
-}
-
 resource "truenas_cloudsync_task" "projects_bomkii" {
   description   = "B2 - Projects - bomkii"
   path          = "/mnt/tank/Projects/bomkii"
@@ -135,11 +120,6 @@ resource "truenas_cloudsync_task" "projects_bomkii" {
     password = var.b2_backup_encryption_password
     salt     = var.b2_backup_encryption_salt
   }
-}
-
-import {
-  to = truenas_cloudsync_task.projects_bomkii
-  id = "13"
 }
 
 resource "truenas_cloudsync_task" "projects_behindgates" {
@@ -170,11 +150,6 @@ resource "truenas_cloudsync_task" "projects_behindgates" {
   }
 }
 
-import {
-  to = truenas_cloudsync_task.projects_behindgates
-  id = "14"
-}
-
 resource "truenas_cloudsync_task" "apps" {
   description   = "B2 - Apps"
   path          = "/mnt/tank/Apps"
@@ -202,9 +177,4 @@ resource "truenas_cloudsync_task" "apps" {
     password = var.b2_backup_encryption_password
     salt     = var.b2_backup_encryption_salt
   }
-}
-
-import {
-  to = truenas_cloudsync_task.apps
-  id = "17"
 }

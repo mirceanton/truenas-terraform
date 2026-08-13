@@ -7,11 +7,6 @@ resource "truenas_app" "traefik" {
   })
 }
 
-import {
-  to = truenas_app.traefik
-  id = "traefik"
-}
-
 resource "truenas_app" "dozzle" {
   name       = "dozzle"
   custom_app = true
@@ -22,20 +17,10 @@ resource "truenas_app" "dozzle" {
   depends_on = [truenas_app.traefik]
 }
 
-import {
-  to = truenas_app.dozzle
-  id = "dozzle"
-}
-
 resource "truenas_app" "exporters" {
   name           = "exporters"
   custom_app     = true
   compose_config = file("${path.module}/files/exporters/compose.yaml")
-}
-
-import {
-  to = truenas_app.exporters
-  id = "exporters"
 }
 
 resource "truenas_app" "garage" {
@@ -51,11 +36,6 @@ resource "truenas_app" "garage" {
     GARAGE_WEBUI_ADMIN_PASS = replace(var.garage_webui_admin_pass, "$", "$$")
   })
   depends_on = [truenas_app.traefik]
-}
-
-import {
-  to = truenas_app.garage
-  id = "garage"
 }
 
 resource "truenas_app" "keycloak" {
@@ -76,9 +56,4 @@ resource "truenas_app" "nexus" {
   custom_app     = true
   compose_config = file("${path.module}/files/registry/compose.yaml")
   depends_on     = [truenas_app.traefik]
-}
-
-import {
-  to = truenas_app.nexus
-  id = "registry"
 }

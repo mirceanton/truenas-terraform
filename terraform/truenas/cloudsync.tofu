@@ -6,8 +6,3 @@ resource "truenas_cloudsync_credentials" "backblaze_b2" {
     key     = var.b2_backup_key
   }
 }
-
-import {
-  to = truenas_cloudsync_credentials.backblaze_b2
-  id = "2"
-}
