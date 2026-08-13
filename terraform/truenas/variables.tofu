@@ -12,7 +12,7 @@ variable "ssh_port" {
 variable "ssh_user" {
   description = "SSH username"
   type        = string
-  default = "terraform"
+  default     = "terraform"
 }
 
 variable "ssh_private_key" {
@@ -34,6 +34,18 @@ variable "b2_backup_account" {
 
 variable "b2_backup_key" {
   description = "Backblaze B2 application key used for cloud sync backups"
+  type        = string
+  sensitive   = true
+}
+
+variable "b2_backup_encryption_password" {
+  description = "Encryption password for B2 cloud sync tasks"
+  type        = string
+  sensitive   = true
+}
+
+variable "b2_backup_encryption_salt" {
+  description = "Encryption salt for B2 cloud sync tasks"
   type        = string
   sensitive   = true
 }
