@@ -1,0 +1,103 @@
+networks:
+    traefik_network:
+        external: true
+services:
+    keycloak:
+        command: start
+        container_name: keycloak
+        depends_on:
+            keycloak-db:
+                condition: service_healthy
+        environment:
+            - TZ=Europe/Bucharest
+            - KC_DB=postgres
+            - KC_DB_URL=jdbc:postgresql://keycloak-db:5432/keycloak
+            - KC_DB_USERNAME=keycloak
+            - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+            - KC_HOSTNAME=keycloak.nas.svc.h.mirceanton.com
+            - KC_HTTP_ENABLED=true
+            - KC_PROXY_HEADERS=xforwarded
+            - KC_HEALTH_ENABLED=true
+            - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN_USERNAME}
+            - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+        expose:
+            - "8080"
+        healthcheck:
+            interval: 10s
+            retries: 5
+            test:
+                - CMD-SHELL
+                - |
+                    exec 3<>/dev/tcp/localhost/9000 &&
+                    echo -e 'GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 &&
+                    cat <&3 | grep -q '200 OK'
+            timeout: 5s
+        image: quay.io/keycloak/keycloak:26.6.4
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.keycloak.rule=Host(`keycloak.nas.svc.h.mirceanton.com`)
+            - traefik.http.routers.keycloak.entrypoints=websecure
+            - traefik.http.routers.keycloak.tls.certresolver=cloudflare
+        networks:
+            - traefik_network
+        restart: unless-stopped
+    keycloak-db:
+        container_name: keycloak-db
+        environment:
+            - POSTGRES_DB=keycloak
+            - POSTGRES_USER=keycloak
+            - POSTGRES_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+        healthcheck:
+            interval: 10s
+            retries: 5
+            test:
+                - CMD-SHELL
+                - pg_isready -U keycloak
+            timeout: 5s
+        image: docker.io/postgres:18.4-alpine
+        networks:
+            - traefik_network
+        restart: unless-stopped
+        volumes:
+            - keycloak-db-data:/var/lib/postgresql
+    lldap:
+        container_name: lldap
+        environment:
+            - TZ=Europe/Bucharest
+            - LLDAP_JWT_SECRET=${LLDAP_JWT_SECRET}
+            - LLDAP_LDAP_BASE_DN=dc=mirceanton,dc=com
+            - LLDAP_LDAP_USER_PASS=${LLDAP_ADMIN_PASSWORD}
+            - LLDAP_HTTP_URL=https://lldap.nas.svc.h.mirceanton.com
+        expose:
+            - "17170"
+            - "3890"
+        healthcheck:
+            interval: 10s
+            retries: 5
+            test:
+                - CMD
+                - /app/lldap
+                - healthcheck
+                - --config-file
+                - /data/lldap_config.toml
+            timeout: 5s
+        image: ghcr.io/lldap/lldap:2026-05-26-alpine
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.lldap.rule=Host(`lldap.nas.svc.h.mirceanton.com`)
+            - traefik.http.routers.lldap.entrypoints=websecure
+            - traefik.http.routers.lldap.tls.certresolver=cloudflare
+            - traefik.http.routers.lldap.service=lldap
+            - traefik.http.services.lldap.loadbalancer.server.port=17170
+        networks:
+            - traefik_network
+        ports:
+            - 10.0.10.245:3890:3890
+        restart: unless-stopped
+        volumes:
+            - lldap-data:/data
+volumes:
+    keycloak-db-data:
+        driver: local
+    lldap-data:
+        driver: local
