@@ -42,7 +42,10 @@ resource "truenas_app" "garage" {
   name       = "garage"
   custom_app = true
   compose_config = templatefile("${path.module}/files/garage/compose.yml", {
-    garage_config           = indent(6, file("${path.module}/files/garage/garage.toml"))
+    garage_config = join("\n", [
+      for i, line in split("\n", trimsuffix(file("${path.module}/files/garage/garage.toml"), "\n")) :
+      i == 0 || line == "" ? line : "            ${line}"
+    ])
     GARAGE_RPC_SECRET       = replace(var.garage_rpc_secret, "$", "$$")
     GARAGE_ADMIN_TOKEN      = replace(var.garage_admin_token, "$", "$$")
     GARAGE_WEBUI_ADMIN_PASS = replace(var.garage_webui_admin_pass, "$", "$$")
