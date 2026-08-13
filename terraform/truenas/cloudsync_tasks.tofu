@@ -14,8 +14,8 @@ resource "truenas_cloudsync_task" "users_mircea" {
   description   = "B2 - Users - Mircea"
   path          = "/mnt/tank/Users/mircea"
   credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "PUSH"
-  transfer_mode = "SYNC"
+  direction     = "push"
+  transfer_mode = "sync"
   transfers     = 16
   snapshot      = true
 
@@ -47,8 +47,8 @@ resource "truenas_cloudsync_task" "users_bianca" {
   description   = "B2 - Users - Bianca"
   path          = "/mnt/tank/Users/bianca"
   credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "PUSH"
-  transfer_mode = "SYNC"
+  direction     = "push"
+  transfer_mode = "sync"
   transfers     = 16
   snapshot      = true
 
@@ -80,8 +80,8 @@ resource "truenas_cloudsync_task" "projects_mirceanton" {
   description   = "B2 - Projects - mirceanton"
   path          = "/mnt/tank/Projects/mirceanton"
   credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "PUSH"
-  transfer_mode = "SYNC"
+  direction     = "push"
+  transfer_mode = "sync"
   transfers     = 16
   snapshot      = true
 
@@ -113,8 +113,8 @@ resource "truenas_cloudsync_task" "projects_bomkii" {
   description   = "B2 - Projects - bomkii"
   path          = "/mnt/tank/Projects/bomkii"
   credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "PUSH"
-  transfer_mode = "SYNC"
+  direction     = "push"
+  transfer_mode = "sync"
   transfers     = 16
   snapshot      = true
 
@@ -146,8 +146,8 @@ resource "truenas_cloudsync_task" "projects_behindgates" {
   description   = "B2 - Projects - BehindGates"
   path          = "/mnt/tank/Projects/BehindGates"
   credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "PUSH"
-  transfer_mode = "SYNC"
+  direction     = "push"
+  transfer_mode = "sync"
   transfers     = 16
   snapshot      = true
 
@@ -179,8 +179,8 @@ resource "truenas_cloudsync_task" "apps" {
   description   = "B2 - Apps"
   path          = "/mnt/tank/Apps"
   credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "PUSH"
-  transfer_mode = "SYNC"
+  direction     = "push"
+  transfer_mode = "sync"
   transfers     = 16
   snapshot      = false
   exclude       = ["Torrent_Downloads"]
