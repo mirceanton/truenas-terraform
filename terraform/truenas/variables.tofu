@@ -49,3 +49,75 @@ variable "b2_backup_encryption_salt" {
   type        = string
   sensitive   = true
 }
+
+variable "traefik_cf_dns_api_token" {
+  description = "Cloudflare API token for Traefik's DNS-01 ACME challenge"
+  type        = string
+  sensitive   = true
+}
+
+variable "traefik_dashboard_basic_auth" {
+  description = "htpasswd string for the Traefik dashboard basic auth middleware"
+  type        = string
+  sensitive   = true
+}
+
+variable "dozzle_admin_username" {
+  description = "Dozzle admin username"
+  type        = string
+  sensitive   = true
+}
+
+variable "dozzle_admin_password" {
+  description = "Dozzle admin htpasswd hash"
+  type        = string
+  sensitive   = true
+}
+
+variable "garage_rpc_secret" {
+  description = "Garage RPC secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "garage_admin_token" {
+  description = "Garage admin API token"
+  type        = string
+  sensitive   = true
+}
+
+variable "garage_webui_admin_pass" {
+  description = "Garage WebUI admin password"
+  type        = string
+  sensitive   = true
+}
+
+variable "keycloak_admin_username" {
+  description = "Keycloak admin username"
+  type        = string
+  sensitive   = true
+}
+
+variable "keycloak_admin_password" {
+  description = "Keycloak admin password"
+  type        = string
+  sensitive   = true
+}
+
+variable "keycloak_db_password" {
+  description = "Keycloak Postgres password"
+  type        = string
+  sensitive   = true
+}
+
+variable "lldap_jwt_secret" {
+  description = "LLDAP JWT secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "lldap_admin_password" {
+  description = "LLDAP admin password"
+  type        = string
+  sensitive   = true
+}
