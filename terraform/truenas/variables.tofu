@@ -25,3 +25,15 @@ variable "ssh_host_key_fingerprint" {
   description = "SHA256 fingerprint of the TrueNAS server SSH host key"
   type        = string
 }
+
+variable "b2_backup_account" {
+  description = "Backblaze B2 account/key ID used for cloud sync backups"
+  type        = string
+  sensitive   = true
+}
+
+variable "b2_backup_key" {
+  description = "Backblaze B2 application key used for cloud sync backups"
+  type        = string
+  sensitive   = true
+}
