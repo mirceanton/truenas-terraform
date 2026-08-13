@@ -57,3 +57,13 @@ resource "truenas_app" "nexus" {
   compose_config = file("${path.module}/files/registry/compose.yaml")
   depends_on     = [truenas_app.traefik]
 }
+
+resource "truenas_app" "zipline" {
+  name       = "zipline"
+  custom_app = true
+  compose_config = templatefile("${path.module}/files/zipline/compose.yaml", {
+    ZIPLINE_DB_PASSWORD  = replace(var.zipline_db_password, "$", "$$")
+    ZIPLINE_CORE_SECRET  = replace(var.zipline_core_secret, "$", "$$")
+    ZIPLINE_TUNNEL_TOKEN = replace(data.cloudflare_zero_trust_tunnel_cloudflared_token.zipline.token, "$", "$$")
+  })
+}
