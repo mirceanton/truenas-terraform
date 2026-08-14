@@ -8,6 +8,11 @@ configs:
       ${ZOT_HTPASSWD_LINE}
 
 services:
+  # No healthcheck: the zot image is fully distroless (no shell, no wget/curl,
+  # not even `ls`) -- there's no tool available inside the container to run
+  # one. TrueNAS's app-state polling waits on Docker's health status when a
+  # HEALTHCHECK is defined, so a broken one here caused "Timeout Waiting for
+  # App State" on create even though the container itself was fine.
   zot:
     container_name: zot
     image: ghcr.io/project-zot/zot-linux-amd64:latest
@@ -21,11 +26,6 @@ services:
     volumes:
       - /mnt/tank/Apps/Zot/data:/var/lib/registry
     expose: ["5000"]
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://0.0.0.0:5000/v2/"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
     networks: ["traefik_network"]
     labels:
       - "traefik.enable=true"
