@@ -31,6 +31,4 @@ inputs = {
 
   cloudflare_api_token  = get_env("TF_VAR_cloudflare_api_token")
   cloudflare_account_id = get_env("TF_VAR_cloudflare_account_id")
-  zipline_db_password   = get_env("TF_VAR_zipline_db_password")
-  zipline_core_secret   = get_env("TF_VAR_zipline_core_secret")
 }

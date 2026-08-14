@@ -132,15 +132,3 @@ variable "cloudflare_account_id" {
   description = "Cloudflare account ID"
   type        = string
 }
-
-variable "zipline_db_password" {
-  description = "Zipline Postgres password"
-  type        = string
-  sensitive   = true
-}
-
-variable "zipline_core_secret" {
-  description = "Zipline core session secret"
-  type        = string
-  sensitive   = true
-}
