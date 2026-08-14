@@ -9,3 +9,9 @@ output "zipline_core_secret" {
   value       = random_password.zipline_core_secret.result
   sensitive   = true
 }
+
+output "zot_admin_password" {
+  description = "Generated Zot admin password (username: admin)"
+  value       = random_password.zot_admin.result
+  sensitive   = true
+}

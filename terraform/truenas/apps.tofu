@@ -77,3 +77,21 @@ resource "truenas_app" "zipline" {
     ZIPLINE_TUNNEL_TOKEN = replace(data.cloudflare_zero_trust_tunnel_cloudflared_token.zipline.token, "$", "$$")
   })
 }
+
+resource "random_password" "zot_admin" {
+  length  = 32
+  special = false
+}
+
+resource "truenas_app" "zot" {
+  name       = "zot"
+  custom_app = true
+  compose_config = templatefile("${path.module}/files/zot/compose.yaml", {
+    zot_config = join("\n", [
+      for i, line in split("\n", trimsuffix(file("${path.module}/files/zot/config.json"), "\n")) :
+      i == 0 || line == "" ? line : "      ${line}"
+    ])
+    ZOT_HTPASSWD_LINE = replace("admin:${bcrypt(random_password.zot_admin.result)}", "$", "$$")
+  })
+  depends_on = [truenas_app.traefik]
+}
