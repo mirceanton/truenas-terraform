@@ -1,61 +1,23 @@
+# NOTE: the 7 docker proxy repos (docker.io, ghcr.io, gcr.io, quay.io,
+# mcr.microsoft.com, registry.k8s.io, oci.external-secrets.io) are
+# intentionally NOT managed here. Nexus 3.94.0+ (we're on 3.95.1) added an
+# `ecrAuth` field to the docker proxy repository API response that the
+# sonatyperepo provider doesn't parse, even at latest (v1.14.0) -- every
+# import fails with `json: unknown field "ecrAuth"`. This is a known, open,
+# currently-blocked upstream issue:
+# https://github.com/sonatype-nexus-community/terraform-provider-sonatyperepo/issues/443
+# Revisit once that's fixed upstream. The proxy repos still exist and work
+# in Nexus, they're just unmanaged by Terraform for now.
 locals {
   registries = [
-    { name = "docker.io", remote_url = "https://registry-1.docker.io" },
-    { name = "ghcr.io", remote_url = "https://ghcr.io" },
-    { name = "gcr.io", remote_url = "https://gcr.io" },
-    { name = "quay.io", remote_url = "https://quay.io" },
-    { name = "mcr.microsoft.com", remote_url = "https://mcr.microsoft.com" },
-    { name = "registry.k8s.io", remote_url = "https://registry.k8s.io" },
-    { name = "oci.external-secrets.io", remote_url = "https://oci.external-secrets.io" },
+    "docker.io",
+    "ghcr.io",
+    "gcr.io",
+    "quay.io",
+    "mcr.microsoft.com",
+    "registry.k8s.io",
+    "oci.external-secrets.io",
   ]
-}
-
-resource "sonatyperepo_repository_docker_proxy" "docker_proxy" {
-  for_each = { for registry in local.registries : registry.name => registry }
-  name     = each.key
-  online   = true
-
-  storage = {
-    blob_store_name                = "default"
-    strict_content_type_validation = true
-  }
-
-  proxy = {
-    remote_url       = each.value.remote_url
-    content_max_age  = 1440
-    metadata_max_age = 1440
-  }
-
-  negative_cache = {
-    enabled      = true
-    time_to_live = 1440
-  }
-
-  http_client = {
-    auto_block = false
-    blocked    = false
-
-    connection = {
-      enable_circular_redirects = true
-      enable_cookies            = true
-      retries                   = 3
-      timeout                   = 60
-      use_trust_store           = false
-    }
-  }
-
-  docker_proxy = {}
-  docker = {
-    path_enabled     = true
-    v1_enabled       = true
-    force_basic_auth = false
-  }
-}
-
-import {
-  for_each = { for registry in local.registries : registry.name => registry }
-  to       = sonatyperepo_repository_docker_proxy.docker_proxy[each.key]
-  id       = each.value.name
 }
 
 resource "sonatyperepo_repository_docker_hosted" "docker_hosted" {
@@ -91,7 +53,7 @@ resource "sonatyperepo_repository_docker_group" "docker_group" {
   group = {
     member_names = concat(
       [sonatyperepo_repository_docker_hosted.docker_hosted.name],
-      [for registry in local.registries : sonatyperepo_repository_docker_proxy.docker_proxy[registry.name].name]
+      local.registries
     )
   }
 

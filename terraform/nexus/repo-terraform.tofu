@@ -1,42 +1,7 @@
-resource "sonatyperepo_repository_terraform_proxy" "terraform_proxy" {
-  name   = "terraform-proxy"
-  online = true
-
-  storage = {
-    blob_store_name                = "default"
-    strict_content_type_validation = true
-  }
-
-  proxy = {
-    remote_url       = "https://registry.terraform.io"
-    content_max_age  = 1440
-    metadata_max_age = 1440
-  }
-
-  negative_cache = {
-    enabled      = true
-    time_to_live = 1440
-  }
-
-  http_client = {
-    auto_block = false
-    blocked    = false
-
-    connection = {
-      enable_circular_redirects = true
-      enable_cookies            = true
-      retries                   = 3
-      timeout                   = 60
-      use_trust_store           = false
-    }
-  }
-
-  terraform = {
-    require_authentication = false
-  }
-}
-
-import {
-  to = sonatyperepo_repository_terraform_proxy.terraform_proxy
-  id = "terraform-proxy"
-}
+# NOTE: terraform-proxy is intentionally NOT managed here. Nexus 3.94.0+
+# (we're on 3.95.1) added fields to proxy repository API responses that the
+# sonatyperepo provider doesn't parse, even at latest (v1.14.0) -- import
+# fails with `json: unknown field ...`. Known, open, currently-blocked
+# upstream issue:
+# https://github.com/sonatype-nexus-community/terraform-provider-sonatyperepo/issues/443
+# The repo still exists and works in Nexus, it's just unmanaged for now.

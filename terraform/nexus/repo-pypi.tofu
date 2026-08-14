@@ -1,41 +1,7 @@
-resource "sonatyperepo_repository_pypi_proxy" "pypi_proxy" {
-  name   = "pypi-proxy"
-  online = true
-
-  storage = {
-    blob_store_name                = "default"
-    strict_content_type_validation = true
-  }
-
-  proxy = {
-    remote_url       = "https://pypi.org"
-    content_max_age  = 1440
-    metadata_max_age = 1440
-  }
-
-  negative_cache = {
-    enabled      = true
-    time_to_live = 1440
-  }
-
-  http_client = {
-    auto_block = false
-    blocked    = false
-
-    connection = {
-      enable_circular_redirects = true
-      enable_cookies            = true
-      retries                   = 3
-      timeout                   = 60
-      use_trust_store           = false
-    }
-  }
-}
-
-import {
-  to = sonatyperepo_repository_pypi_proxy.pypi_proxy
-  id = "pypi-proxy"
-}
+# NOTE: pypi-proxy is intentionally NOT managed here -- same upstream
+# provider/NXRM version gap as repo-docker.tofu (unknown field on read).
+# See: https://github.com/sonatype-nexus-community/terraform-provider-sonatyperepo/issues/443
+# The repo still exists and is referenced by name in pypi_group below.
 
 resource "sonatyperepo_repository_pypi_hosted" "pypi_hosted" {
   name   = "pypi-local"
@@ -65,7 +31,7 @@ resource "sonatyperepo_repository_pypi_group" "pypi_group" {
   group = {
     member_names = [
       sonatyperepo_repository_pypi_hosted.pypi_hosted.name,
-      sonatyperepo_repository_pypi_proxy.pypi_proxy.name,
+      "pypi-proxy",
     ]
   }
 }

@@ -1,3 +1,5 @@
+# NOTE: no import block -- these repo names 404 against the live API (genuinely
+# don't exist yet, not a naming mismatch), so this just creates them fresh.
 locals {
   apt_repos = [
     { name = "apt-ubuntu-24-04", remote_url = "https://archive.ubuntu.com/ubuntu/", distribution = "noble" },
@@ -46,10 +48,4 @@ resource "sonatyperepo_repository_apt_proxy" "apt_proxy" {
   apt = {
     distribution = each.value.distribution
   }
-}
-
-import {
-  for_each = { for repo in local.apt_repos : repo.name => repo }
-  to       = sonatyperepo_repository_apt_proxy.apt_proxy[each.key]
-  id       = each.value.name
 }
