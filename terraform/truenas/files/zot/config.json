@@ -30,6 +30,15 @@
     "level": "info"
   },
   "extensions": {
+    "search": {
+      "enable": true,
+      "cve": {
+        "updateInterval": "24h"
+      }
+    },
+    "ui": {
+      "enable": true
+    },
     "sync": {
       "enable": true,
       "registries": [
