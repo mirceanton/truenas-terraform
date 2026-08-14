@@ -4,6 +4,14 @@ terraform {
       source  = "registry.terraform.io/deevus/truenas"
       version = "0.16.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "5.22.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.7.2"
+    }
   }
 }
 

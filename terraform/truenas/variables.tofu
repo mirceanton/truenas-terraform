@@ -121,3 +121,14 @@ variable "lldap_admin_password" {
   type        = string
   sensitive   = true
 }
+
+variable "cloudflare_api_token" {
+  description = "Cloudflare API token (Cloudflare Tunnel Write + DNS Write) for managing the Zipline tunnel"
+  type        = string
+  sensitive   = true
+}
+
+variable "cloudflare_account_id" {
+  description = "Cloudflare account ID"
+  type        = string
+}
