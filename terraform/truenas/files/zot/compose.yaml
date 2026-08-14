@@ -1,0 +1,40 @@
+---
+configs:
+  zot-config:
+    content: |
+      ${zot_config}
+  zot-htpasswd:
+    content: |
+      ${ZOT_HTPASSWD_LINE}
+
+services:
+  zot:
+    container_name: zot
+    image: ghcr.io/project-zot/zot-linux-amd64:latest
+    restart: unless-stopped
+    command: ["serve", "/etc/zot/config.json"]
+    configs:
+      - source: zot-config
+        target: /etc/zot/config.json
+      - source: zot-htpasswd
+        target: /etc/zot/htpasswd
+    volumes:
+      - /mnt/tank/Apps/Zot/data:/var/lib/registry
+    expose: ["5000"]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://0.0.0.0:5000/v2/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks: ["traefik_network"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zot.rule=Host(`zot.nas.svc.h.mirceanton.com`)"
+      - "traefik.http.routers.zot.entrypoints=websecure"
+      - "traefik.http.routers.zot.tls.certresolver=cloudflare"
+      - "traefik.http.routers.zot.service=zot"
+      - "traefik.http.services.zot.loadbalancer.server.port=5000"
+
+networks:
+  traefik_network:
+    external: true
