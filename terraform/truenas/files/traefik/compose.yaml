@@ -32,7 +32,7 @@ services:
         environment:
             - TZ=Europe/Bucharest
             - CF_DNS_API_TOKEN=${TRAEFIK_CF_DNS_API_TOKEN}
-        image: docker.io/traefik:v3.7.10
+        image: docker.io/traefik:v3.7.11
         labels:
             - traefik.enable=true
             - traefik.http.routers.traefik.rule=Host(`nas.svc.h.mirceanton.com`)
