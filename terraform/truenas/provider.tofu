@@ -4,10 +4,6 @@ terraform {
       source  = "registry.terraform.io/deevus/truenas"
       version = "0.16.0"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "5.23.0"
-    }
     random = {
       source  = "hashicorp/random"
       version = "3.9.0"

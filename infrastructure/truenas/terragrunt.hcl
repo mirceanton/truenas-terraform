@@ -28,7 +28,4 @@ inputs = {
   keycloak_db_password         = get_env("TF_VAR_keycloak_db_password")
   lldap_jwt_secret             = get_env("TF_VAR_lldap_jwt_secret")
   lldap_admin_password         = get_env("TF_VAR_lldap_admin_password")
-
-  cloudflare_api_token  = get_env("TF_VAR_cloudflare_api_token")
-  cloudflare_account_id = get_env("TF_VAR_cloudflare_account_id")
 }
