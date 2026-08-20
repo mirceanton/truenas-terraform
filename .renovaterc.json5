@@ -1,4 +1,22 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [ "github>mirceanton/renovate-config//default.json5" ]
+    "extends": [ "github>mirceanton/renovate-config//default.json5" ],
+    "packageRules": [
+        // TrueNAS custom-app deploys are one-shot with no ImagePullBackOff-style
+        // retry (unlike Kubernetes) -- give freshly-published images a buffer so
+        // we don't land mid-registry-propagation. See 2026-08-19 traefik incident:
+        // "no matching manifest for linux/amd64" right after a v3.7.11 tag push.
+        {
+            "matchDatasources": ["docker"],
+            "minimumReleaseAge": "1 day"
+        },
+        // Route infra/terraform changes through a real PR (and therefore
+        // Terragrunt CI's plan step) before merging, even for minor/patch/digest
+        // updates that would otherwise branch-automerge straight to main with
+        // no pre-apply validation at all.
+        {
+            "matchFileNames": ["root.hcl", "infrastructure/**", "terraform/**"],
+            "automergeType": "pr"
+        }
+    ]
 }
