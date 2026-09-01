@@ -4,10 +4,34 @@ include "root" {
 
 dependency "truenas" {
   config_path = find_in_parent_folders("truenas")
+
+  # infrastructure/truenas may not have been applied with these outputs yet (e.g. a fresh
+  # checkout's first `plan`); mock them so `plan` works, but never let `apply` push fake secrets.
+  mock_outputs = {
+    traefik_dashboard_username  = "admin"
+    traefik_dashboard_password  = "mock-traefik-dashboard-password"
+    dozzle_admin_username       = "admin"
+    dozzle_admin_password       = "mock-dozzle-admin-password"
+    garage_rpc_secret           = "mock-garage-rpc-secret"
+    garage_admin_token          = "mock-garage-admin-token"
+    garage_webui_admin_username = "admin"
+    garage_webui_admin_password = "mock-garage-webui-admin-password"
+    keycloak_admin_username     = "admin"
+    keycloak_admin_password     = "mock-keycloak-admin-password"
+    keycloak_db_password        = "mock-keycloak-db-password"
+    lldap_jwt_secret            = "mock-lldap-jwt-secret"
+    lldap_admin_password        = "mock-lldap-admin-password"
+    zot_admin_password          = "mock-zot-admin-password"
+  }
+  mock_outputs_allowed_terraform_commands = ["plan"]
 }
 
 dependency "garage" {
   config_path = find_in_parent_folders("truenas/apps/garage")
+
+  # Same bootstrapping problem as above: apps/garage may not have been applied yet either.
+  mock_outputs                            = { keys = {} }
+  mock_outputs_allowed_terraform_commands = ["plan"]
 }
 
 terraform {
