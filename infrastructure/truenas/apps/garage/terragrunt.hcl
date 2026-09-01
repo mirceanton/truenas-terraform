@@ -19,8 +19,8 @@ inputs = {
     home_ops_backups_readwrite = {
       name = "home-ops-backups-readwrite"
       permissions = {
-        home_ops_volsync = { read  = true, write = true }
-        home_ops_cnpg = { read  = true, write = true }
+        home_ops_volsync = { read = true, write = true }
+        home_ops_cnpg    = { read = true, write = true }
       }
     }
   }
