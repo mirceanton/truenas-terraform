@@ -13,6 +13,9 @@ locals {
   ]...)
 }
 
+# ==============================================================
+# Buckets
+# ==============================================================
 resource "garage_bucket" "this" {
   for_each = var.buckets
 
@@ -24,12 +27,23 @@ resource "garage_bucket" "this" {
   website_index_document = each.value.website_index_document
 }
 
+# ==============================================================
+# Keys
+# ==============================================================
 resource "garage_key" "this" {
   for_each = var.keys
 
   name = each.value.name
 }
+output "keys" {
+  description = "Garage keys, keyed by stable logical name"
+  value       = { for name, key in garage_key.this : name => key }
+  sensitive   = true
+}
 
+# ==============================================================
+# Permissions
+# ==============================================================
 resource "garage_bucket_permission" "this" {
   for_each = local.bucket_permissions
 
