@@ -19,7 +19,7 @@ services:
             - DOZZLE_AUTH_PROVIDER=simple
         expose:
             - "8080"
-        image: amir20/dozzle:v10.7.5
+        image: amir20/dozzle:v10.8.0
         labels:
             - traefik.enable=true
             - traefik.http.routers.dozzle.rule=Host(`dozzle.nas.svc.h.mirceanton.com`)
