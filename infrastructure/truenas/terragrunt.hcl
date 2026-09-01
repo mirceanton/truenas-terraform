@@ -28,4 +28,6 @@ inputs = {
   keycloak_db_password         = get_env("TF_VAR_keycloak_db_password")
   lldap_jwt_secret             = get_env("TF_VAR_lldap_jwt_secret")
   lldap_admin_password         = get_env("TF_VAR_lldap_admin_password")
+  lldap_smtp_username          = get_env("TF_VAR_lldap_smtp_username")
+  lldap_smtp_password          = get_env("TF_VAR_lldap_smtp_password")
 }

@@ -47,6 +47,8 @@ resource "truenas_app" "keycloak" {
     KEYCLOAK_DB_PASSWORD    = replace(var.keycloak_db_password, "$", "$$")
     LLDAP_JWT_SECRET        = replace(var.lldap_jwt_secret, "$", "$$")
     LLDAP_ADMIN_PASSWORD    = replace(var.lldap_admin_password, "$", "$$")
+    LLDAP_SMTP_USER         = replace(var.lldap_smtp_username, "$", "$$")
+    LLDAP_SMTP_PASSWORD     = replace(var.lldap_smtp_password, "$", "$$")
   })
   depends_on = [truenas_app.traefik]
 }
