@@ -121,3 +121,15 @@ variable "lldap_admin_password" {
   type        = string
   sensitive   = true
 }
+
+variable "lldap_smtp_username" {
+  description = "SMTP username (mailbox address) LLDAP uses to send password-reset emails"
+  type        = string
+  sensitive   = true
+}
+
+variable "lldap_smtp_password" {
+  description = "SMTP password for the LLDAP password-reset mailbox"
+  type        = string
+  sensitive   = true
+}
