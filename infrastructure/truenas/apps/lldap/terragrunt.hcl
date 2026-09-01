@@ -11,4 +11,13 @@ inputs = {
   lldap_ldap_url = "ldap://lldap.nas.svc.h.mirceanton.com:3890"
   lldap_base_dn  = "dc=mirceanton,dc=com"
   lldap_password = get_env("TF_VAR_lldap_password")
+
+  groups = ["homelab-users"]
+
+  users = {
+    # username = {
+    #   email  = "user@mirceanton.com"
+    #   groups = ["homelab-users"]
+    # }
+  }
 }

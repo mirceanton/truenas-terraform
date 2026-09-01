@@ -1,3 +1,5 @@
-resource "lldap_group" "homelab_users" {
-  display_name = "homelab-users"
+resource "lldap_group" "this" {
+  for_each = var.groups
+
+  display_name = each.value
 }
