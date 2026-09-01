@@ -35,13 +35,26 @@ Two top-level trees implement a standard Terragrunt module/live split:
   [`deevus/truenas`](https://registry.terraform.io/providers/deevus/truenas) provider, authenticating over SSH
   (host, port, user, private key path, host key fingerprint — all passed in as variables).
 - **`infrastructure/`** — Terragrunt "units": live configurations that wire a module from `terraform/` to real
-  values and remote state. `infrastructure/truenas`, `infrastructure/truenas/apps`, and `infrastructure/1password`
-  are the planned units (currently placeholders).
+  values and remote state. `infrastructure/truenas` deploys the TrueNAS apps, `infrastructure/truenas/apps/*`
+  configures those apps' own APIs (Garage buckets/keys, LLDAP users/groups), and `infrastructure/1password/*`
+  pushes app credentials into 1Password.
 
 `root.hcl` is the Terragrunt root config included by every unit. It defines the remote state backend: an
 S3-compatible bucket hosted on Backblaze B2 (`tfstate-truenas-terraform`). The state key is derived from each
 unit's path with the `infrastructure/` prefix stripped, so state files mirror the `infrastructure/` directory
 layout. Terragrunt generates `backend.tf` per unit from this config (overwriting on each run).
+
+### Credentials
+
+App credentials (admin passwords, API tokens, JWT secrets, etc.) are generated in `terraform/truenas` with
+`random_password`/`random_id` resources — not sourced from 1Password. Only genuinely external credentials
+(the TrueNAS SSH key, Backblaze/Cloudflare API tokens, the LLDAP SMTP mailbox password) still flow in via
+`.env.1pass` and `TF_VAR_*` env vars. Generated credentials are exposed as outputs and flow *out* to 1Password
+via the `infrastructure/1password/*` units, which use the
+[`terraform-modules-1password`](https://github.com/mirceanton/terraform-modules-1password) module (same pattern
+as `mikrotik-terraform`) to create/update items in a vault named after the unit's directory. Units that need a
+generated credential to talk to an app's own API (e.g. `infrastructure/truenas/apps/garage` needs the Garage
+admin token) consume it via a Terragrunt `dependency` block on `infrastructure/truenas`, not via an env var.
 
 ### CI/CD (`.github/workflows/`)
 
