@@ -12,12 +12,12 @@ inputs = {
   lldap_base_dn  = "dc=mirceanton,dc=com"
   lldap_password = get_env("TF_VAR_lldap_password")
 
-  groups = ["homelab-users"]
+  groups = ["k8s-admins", "k8s-viewers", "modelhub-admins", "modelhub-editors"]
 
   users = {
-    # username = {
-    #   email  = "user@mirceanton.com"
-    #   groups = ["homelab-users"]
-    # }
+    mirk = {
+      email  = "mircea@mirceanton.com"
+      groups = ["k8s-admins", "modelhub-admins"]
+    }
   }
 }
