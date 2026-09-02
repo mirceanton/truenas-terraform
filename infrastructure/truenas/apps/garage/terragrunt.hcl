@@ -2,13 +2,25 @@ include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
+dependency "truenas" {
+  config_path = find_in_parent_folders("truenas")
+
+  # infrastructure/truenas may not have been applied with this output yet (e.g. a fresh
+  # checkout's first `plan`); mock it so `plan` works, but never let `apply` use a fake token.
+  mock_outputs                            = { garage_admin_token = "mock-garage-admin-token" }
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
+  # infrastructure/truenas's existing state predates this output; shallow-merge so the mock
+  # only fills the missing key instead of being ignored outright because state already exists.
+  mock_outputs_merge_with_state = true
+}
+
 terraform {
   source = "../../../../terraform/garage"
 }
 
 inputs = {
   garage_url   = "https://garage-admin.nas.svc.h.mirceanton.com"
-  garage_token = get_env("TF_VAR_garage_token")
+  garage_token = dependency.truenas.outputs.garage_admin_token
 
   buckets = {
     home_ops_volsync = { global_alias = "home-ops-volsync" }
