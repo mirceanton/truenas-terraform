@@ -9,6 +9,9 @@ dependency "truenas" {
   # checkout's first `plan`); mock it so `plan` works, but never let `apply` use a fake token.
   mock_outputs                            = { garage_admin_token = "mock-garage-admin-token" }
   mock_outputs_allowed_terraform_commands = ["init", "plan"]
+  # infrastructure/truenas's existing state predates this output; shallow-merge so the mock
+  # only fills the missing key instead of being ignored outright because state already exists.
+  mock_outputs_merge_with_state = true
 }
 
 terraform {

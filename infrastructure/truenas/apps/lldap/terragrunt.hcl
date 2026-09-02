@@ -9,6 +9,9 @@ dependency "truenas" {
   # checkout's first `plan`); mock it so `plan` works, but never let `apply` use a fake password.
   mock_outputs                            = { lldap_admin_password = "mock-lldap-admin-password" }
   mock_outputs_allowed_terraform_commands = ["init", "plan"]
+  # infrastructure/truenas's existing state predates this output; shallow-merge so the mock
+  # only fills the missing key instead of being ignored outright because state already exists.
+  mock_outputs_merge_with_state = true
 }
 
 terraform {

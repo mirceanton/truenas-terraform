@@ -24,6 +24,9 @@ dependency "truenas" {
     zot_admin_password          = "mock-zot-admin-password"
   }
   mock_outputs_allowed_terraform_commands = ["init", "plan"]
+  # infrastructure/truenas's existing state predates these outputs; shallow-merge so the mocks
+  # only fill missing keys instead of being ignored outright because state already exists.
+  mock_outputs_merge_with_state = true
 }
 
 dependency "garage" {
@@ -32,6 +35,7 @@ dependency "garage" {
   # Same bootstrapping problem as above: apps/garage may not have been applied yet either.
   mock_outputs                            = { keys = {} }
   mock_outputs_allowed_terraform_commands = ["init", "plan"]
+  mock_outputs_merge_with_state           = true
 }
 
 terraform {
