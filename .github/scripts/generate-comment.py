@@ -22,6 +22,12 @@ from jinja2 import Environment, FileSystemLoader
 #          "HH:MM:SS.mmm STDOUT [unit/path] <content>"  (no tofu prefix)
 LINE_RE = re.compile(r"^\S+ \S+ \[(?P<unit>[^\]]+)\] (?:tofu: )?(?P<content>.*)$")
 
+# Terragrunt logs the discovered unit list as one multi-line message: only the
+# first unit shares its line with the "HH:MM:SS.mmm INFO" prefix, e.g.
+#   "HH:MM:SS.mmm INFO   - Unit infrastructure/truenas"
+#   "- Unit infrastructure/truenas/apps/garage"          (continuation, no prefix)
+UNIT_RE = re.compile(r"^(?:\S+\s+\S+\s+)?- Unit (?P<unit>.+)$")
+
 PLAN_SUMMARY_RE = re.compile(
     r"Plan: (?P<add>\d+) to add, (?P<change>\d+) to change, (?P<destroy>\d+) to destroy"
 )
@@ -72,8 +78,8 @@ def parse(input_file: Path, mode: str) -> list[UnitStats]:
 
     for raw_line in input_file.read_text().splitlines():
         # Extract the ordered unit list from Terragrunt's header section.
-        if m := re.match(r"^- Unit (.+)$", raw_line):
-            stat = UnitStats(name=m.group(1), mode=mode)
+        if m := UNIT_RE.match(raw_line):
+            stat = UnitStats(name=m.group("unit"), mode=mode)
             units.append(stat)
             unit_map[stat.name] = stat
             continue
