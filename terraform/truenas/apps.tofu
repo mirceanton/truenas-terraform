@@ -8,7 +8,7 @@ resource "truenas_app" "traefik" {
   custom_app = true
   compose_config = templatefile("${path.module}/files/traefik/compose.yaml", {
     TRAEFIK_CF_DNS_API_TOKEN     = replace(var.traefik_cf_dns_api_token, "$", "$$")
-    TRAEFIK_DASHBOARD_BASIC_AUTH = replace("${var.traefik_dashboard_username}:${bcrypt(random_password.traefik_dashboard_admin.result)}", "$", "$$")
+    TRAEFIK_DASHBOARD_BASIC_AUTH = replace("${var.traefik_dashboard_username}:${random_password.traefik_dashboard_admin.bcrypt_hash}", "$", "$$")
   })
 }
 
@@ -22,7 +22,7 @@ resource "truenas_app" "dozzle" {
   custom_app = true
   compose_config = templatefile("${path.module}/files/dozzle/compose.yaml", {
     DOZZLE_ADMIN_USERNAME = replace(var.dozzle_admin_username, "$", "$$")
-    DOZZLE_ADMIN_PASSWORD = replace(bcrypt(random_password.dozzle_admin.result), "$", "$$")
+    DOZZLE_ADMIN_PASSWORD = replace(random_password.dozzle_admin.bcrypt_hash, "$", "$$")
   })
   depends_on = [truenas_app.traefik]
 }
@@ -57,7 +57,7 @@ resource "truenas_app" "garage" {
     ])
     GARAGE_RPC_SECRET       = replace(random_id.garage_rpc_secret.hex, "$", "$$")
     GARAGE_ADMIN_TOKEN      = replace(random_password.garage_admin_token.result, "$", "$$")
-    GARAGE_WEBUI_ADMIN_PASS = replace("${var.garage_webui_admin_username}:${bcrypt(random_password.garage_webui_admin.result)}", "$", "$$")
+    GARAGE_WEBUI_ADMIN_PASS = replace("${var.garage_webui_admin_username}:${random_password.garage_webui_admin.bcrypt_hash}", "$", "$$")
   })
   depends_on = [truenas_app.traefik]
 }
@@ -117,7 +117,7 @@ resource "truenas_app" "zot" {
       for i, line in split("\n", trimsuffix(file("${path.module}/files/zot/config.json"), "\n")) :
       i == 0 || line == "" ? line : "      ${line}"
     ])
-    ZOT_HTPASSWD_LINE = replace("admin:${bcrypt(random_password.zot_admin.result)}", "$", "$$")
+    ZOT_HTPASSWD_LINE = replace("admin:${random_password.zot_admin.bcrypt_hash}", "$", "$$")
   })
   depends_on = [truenas_app.traefik]
 }

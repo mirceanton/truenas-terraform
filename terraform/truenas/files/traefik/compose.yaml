@@ -17,7 +17,7 @@ services:
             - --providers.docker.exposedbydefault=false
             - --providers.docker.network=traefik_network
             - --certificatesresolvers.cloudflare.acme.email=business@mirceanton.com
-            - --certificatesresolvers.cloudflare.acme.storage=/acme.json
+            - --certificatesresolvers.cloudflare.acme.storage=/etc/traefik/acme.json
             - --certificatesresolvers.cloudflare.acme.dnschallenge=true
             - --certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare
             - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53
