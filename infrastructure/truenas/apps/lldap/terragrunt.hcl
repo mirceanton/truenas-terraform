@@ -8,7 +8,7 @@ dependency "truenas" {
   # infrastructure/truenas may not have been applied with this output yet (e.g. a fresh
   # checkout's first `plan`); mock it so `plan` works, but never let `apply` use a fake password.
   mock_outputs                            = { lldap_admin_password = "mock-lldap-admin-password" }
-  mock_outputs_allowed_terraform_commands = ["plan"]
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 terraform {

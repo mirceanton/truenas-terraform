@@ -23,7 +23,7 @@ dependency "truenas" {
     lldap_admin_password        = "mock-lldap-admin-password"
     zot_admin_password          = "mock-zot-admin-password"
   }
-  mock_outputs_allowed_terraform_commands = ["plan"]
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "garage" {
@@ -31,7 +31,7 @@ dependency "garage" {
 
   # Same bootstrapping problem as above: apps/garage may not have been applied yet either.
   mock_outputs                            = { keys = {} }
-  mock_outputs_allowed_terraform_commands = ["plan"]
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 terraform {
