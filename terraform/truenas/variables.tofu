@@ -56,70 +56,28 @@ variable "traefik_cf_dns_api_token" {
   sensitive   = true
 }
 
-variable "traefik_dashboard_basic_auth" {
-  description = "htpasswd string for the Traefik dashboard basic auth middleware"
+variable "traefik_dashboard_username" {
+  description = "Traefik dashboard basic-auth username"
   type        = string
-  sensitive   = true
+  default     = "admin"
 }
 
 variable "dozzle_admin_username" {
   description = "Dozzle admin username"
   type        = string
-  sensitive   = true
+  default     = "admin"
 }
 
-variable "dozzle_admin_password" {
-  description = "Dozzle admin htpasswd hash"
+variable "garage_webui_admin_username" {
+  description = "Garage WebUI admin username"
   type        = string
-  sensitive   = true
-}
-
-variable "garage_rpc_secret" {
-  description = "Garage RPC secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "garage_admin_token" {
-  description = "Garage admin API token"
-  type        = string
-  sensitive   = true
-}
-
-variable "garage_webui_admin_pass" {
-  description = "Garage WebUI admin password"
-  type        = string
-  sensitive   = true
+  default     = "admin"
 }
 
 variable "keycloak_admin_username" {
   description = "Keycloak admin username"
   type        = string
-  sensitive   = true
-}
-
-variable "keycloak_admin_password" {
-  description = "Keycloak admin password"
-  type        = string
-  sensitive   = true
-}
-
-variable "keycloak_db_password" {
-  description = "Keycloak Postgres password"
-  type        = string
-  sensitive   = true
-}
-
-variable "lldap_jwt_secret" {
-  description = "LLDAP JWT secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "lldap_admin_password" {
-  description = "LLDAP admin password"
-  type        = string
-  sensitive   = true
+  default     = "admin"
 }
 
 variable "lldap_smtp_username" {
