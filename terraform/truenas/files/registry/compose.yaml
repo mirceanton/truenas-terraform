@@ -8,7 +8,7 @@ services:
             - INSTALL4J_ADD_VM_PARAMS=-Xms2g -Xmx2g -XX:MaxDirectMemorySize=2g
         expose:
             - "8081"
-        image: sonatype/nexus3:3.95.3-alpine
+        image: sonatype/nexus3:3.96.0-alpine
         labels:
             - traefik.enable=true
             - traefik.http.routers.registry-svc.rule=Host(`registry.nas.svc.h.mirceanton.com`)
