@@ -38,19 +38,6 @@ dependency "garage" {
   mock_outputs_merge_with_state           = true
 }
 
-dependency "keycloak" {
-  config_path = find_in_parent_folders("truenas/apps/keycloak")
-
-  # Same bootstrapping problem as above: apps/keycloak may not have been applied yet either.
-  mock_outputs = {
-    operator_realm    = "mock-realm"
-    operator_username = "keycloak-operator"
-    operator_password = "mock-keycloak-operator-password"
-  }
-  mock_outputs_allowed_terraform_commands = ["init", "plan"]
-  mock_outputs_merge_with_state           = true
-}
-
 terraform {
   source = "git::https://github.com/mirceanton/terraform-modules-1password.git//modules/1password-item?ref=v0.1.1"
 }
@@ -118,22 +105,6 @@ inputs = {
         category = "login"
         username = "admin"
         password = dependency.truenas.outputs.zot_admin_password
-      }
-      "Keycloak Operator" = {
-        category = "login"
-        username = dependency.keycloak.outputs.operator_username
-        password = dependency.keycloak.outputs.operator_password
-        sections = [
-          {
-            label = "extra"
-            fields = [
-              {
-                label = "realm"
-                value = dependency.keycloak.outputs.operator_realm
-              },
-            ]
-          },
-        ]
       }
     },
     {
