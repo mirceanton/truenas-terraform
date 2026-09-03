@@ -3,14 +3,15 @@ include "root" {
 }
 
 dependency "keycloak" {
-  config_path = find_in_parent_folders("truenas/apps/keycloak")
+  config_path = find_in_parent_folders("truenas/apps/keycloak/homelab")
 
-  # infrastructure/truenas/apps/keycloak may not have been applied with these outputs yet (e.g. a
-  # fresh checkout's first `plan`); mock them so `plan` works, but never let `apply` push fake secrets.
+  # infrastructure/truenas/apps/keycloak/homelab may not have been applied with these outputs yet
+  # (e.g. a fresh checkout's first `plan`); mock them so `plan` works, but never let `apply` push
+  # fake secrets.
   mock_outputs = {
-    operator_realm    = "mock-realm"
-    operator_username = "keycloak-operator"
-    operator_password = "mock-keycloak-operator-password"
+    realm_id       = "mock-realm"
+    admin_username = "keycloak-operator"
+    admin_password = "mock-keycloak-operator-password"
   }
   mock_outputs_allowed_terraform_commands = ["init", "plan"]
   mock_outputs_merge_with_state           = true
@@ -26,15 +27,15 @@ inputs = {
   secrets = {
     "keycloak-operator" = {
       category = "login"
-      username = dependency.keycloak.outputs.operator_username
-      password = dependency.keycloak.outputs.operator_password
+      username = dependency.keycloak.outputs.admin_username
+      password = dependency.keycloak.outputs.admin_password
       sections = [
         {
           label = "extra"
           fields = [
             {
               label = "realm"
-              value = dependency.keycloak.outputs.operator_realm
+              value = dependency.keycloak.outputs.realm_id
             },
           ]
         },

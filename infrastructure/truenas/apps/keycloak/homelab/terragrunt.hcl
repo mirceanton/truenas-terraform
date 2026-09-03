@@ -18,7 +18,7 @@ dependency "truenas" {
 }
 
 terraform {
-  source = "../../../../terraform/keycloak"
+  source = "../../../../../terraform/keycloak"
 }
 
 inputs = {
@@ -26,5 +26,9 @@ inputs = {
   keycloak_username = dependency.truenas.outputs.keycloak_admin_username
   keycloak_password = dependency.truenas.outputs.keycloak_admin_password
 
-  realm_id = "homelab"
+  # Mirrors how infrastructure/1password/<vault-name> derives its vault name: this unit's
+  # directory name is the realm name.
+  realm_id = basename(get_terragrunt_dir())
+
+  admin_username = "keycloak-operator"
 }

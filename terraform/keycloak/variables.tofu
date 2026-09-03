@@ -15,7 +15,7 @@ variable "keycloak_password" {
 }
 
 variable "realm_id" {
-  description = "Keycloak realm to create; the operator user is created in it and scoped to administer only it"
+  description = "Keycloak realm to create; the admin user is created in it and scoped to administer only it"
   type        = string
 }
 
@@ -25,14 +25,13 @@ variable "realm_display_name" {
   default     = null
 }
 
-variable "operator_username" {
-  description = "Username for the Keycloak operator service account"
+variable "admin_username" {
+  description = "Username for the realm admin account"
   type        = string
-  default     = "keycloak-operator"
 }
 
-variable "operator_realm_management_roles" {
-  description = "realm-management client roles (scoped to var.realm_id, not master) granted to the operator user"
+variable "admin_realm_management_roles" {
+  description = "realm-management client roles (scoped to var.realm_id, not master) granted to the admin account"
   type        = set(string)
   default = [
     "manage-realm",
