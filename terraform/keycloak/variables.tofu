@@ -15,7 +15,7 @@ variable "keycloak_password" {
 }
 
 variable "realm_id" {
-  description = "Keycloak realm to create; the admin user is created in it and scoped to administer only it"
+  description = "Keycloak realm to create; the admin user is scoped to administer only it"
   type        = string
 }
 
@@ -26,7 +26,7 @@ variable "realm_display_name" {
 }
 
 variable "admin_username" {
-  description = "Username for the realm admin account"
+  description = "Username for the master-realm admin account scoped to var.realm_id"
   type        = string
 }
 
@@ -37,7 +37,7 @@ variable "admin_password_rotation_days" {
 }
 
 variable "admin_realm_management_roles" {
-  description = "realm-management client roles (scoped to var.realm_id, not master) granted to the admin account"
+  description = "Delegated-admin roles (from master's \"<realm_id>-realm\" client, scoped to var.realm_id) granted to the admin account"
   type        = set(string)
   default = [
     "manage-realm",
