@@ -14,36 +14,30 @@ variable "keycloak_password" {
   sensitive   = true
 }
 
-variable "realms" {
-  description = "Keycloak realms to manage, keyed by stable logical name (used as the realm ID)"
-  type = map(object({
-    display_name = optional(string)
-    enabled      = optional(bool, true)
-  }))
-  default = {}
+variable "realm_id" {
+  description = "Keycloak realm the operator user is created in and scoped to administer. Must already exist."
+  type        = string
 }
 
-variable "groups" {
-  description = "Keycloak groups to manage, keyed by stable logical name. realm must reference a name present in var.realms."
-  type = map(object({
-    realm = string
-    name  = string
-  }))
-  default = {}
+variable "operator_username" {
+  description = "Username for the Keycloak operator service account"
+  type        = string
+  default     = "keycloak-operator"
 }
 
-variable "clients" {
-  description = "Keycloak OpenID Connect clients to manage, keyed by stable logical name. realm must reference a name present in var.realms."
-  type = map(object({
-    realm                           = string
-    client_id                       = string
-    enabled                         = optional(bool, true)
-    access_type                     = optional(string, "CONFIDENTIAL")
-    standard_flow_enabled           = optional(bool, true)
-    direct_access_grants_enabled    = optional(bool, false)
-    valid_redirect_uris             = optional(list(string), [])
-    valid_post_logout_redirect_uris = optional(list(string), [])
-    web_origins                     = optional(list(string), [])
-  }))
-  default = {}
+variable "operator_realm_management_roles" {
+  description = "realm-management client roles (scoped to var.realm_id, not master) granted to the operator user"
+  type        = set(string)
+  default = [
+    "manage-realm",
+    "manage-clients",
+    "manage-users",
+    "create-client",
+    "view-realm",
+    "view-clients",
+    "view-users",
+    "query-clients",
+    "query-users",
+    "query-groups",
+  ]
 }

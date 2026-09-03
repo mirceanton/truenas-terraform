@@ -1,28 +1,37 @@
-resource "keycloak_realm" "this" {
-  for_each = var.realms
-
-  realm        = each.key
-  display_name = each.value.display_name
-  enabled      = each.value.enabled
+resource "random_password" "operator" {
+  length  = 32
+  special = false
 }
 
-resource "keycloak_group" "this" {
-  for_each = var.groups
+resource "keycloak_user" "operator" {
+  realm_id = var.realm_id
+  username = var.operator_username
+  enabled  = true
 
-  realm_id = keycloak_realm.this[each.value.realm].id
-  name     = each.value.name
+  initial_password {
+    value     = random_password.operator.result
+    temporary = false
+  }
 }
 
-resource "keycloak_openid_client" "this" {
-  for_each = var.clients
+# The realm's own realm-management client authorizes admin API calls scoped to that realm only,
+# so granting these roles to a user of the realm itself never requires master-realm access.
+data "keycloak_openid_client" "realm_management" {
+  realm_id  = var.realm_id
+  client_id = "realm-management"
+}
 
-  realm_id                        = keycloak_realm.this[each.value.realm].id
-  client_id                       = each.value.client_id
-  enabled                         = each.value.enabled
-  access_type                     = each.value.access_type
-  standard_flow_enabled           = each.value.standard_flow_enabled
-  direct_access_grants_enabled    = each.value.direct_access_grants_enabled
-  valid_redirect_uris             = each.value.valid_redirect_uris
-  valid_post_logout_redirect_uris = each.value.valid_post_logout_redirect_uris
-  web_origins                     = each.value.web_origins
+data "keycloak_role" "operator" {
+  for_each = var.operator_realm_management_roles
+
+  realm_id  = var.realm_id
+  client_id = data.keycloak_openid_client.realm_management.id
+  name      = each.value
+}
+
+resource "keycloak_user_roles" "operator" {
+  realm_id = var.realm_id
+  user_id  = keycloak_user.operator.id
+
+  role_ids = [for role in data.keycloak_role.operator : role.id]
 }

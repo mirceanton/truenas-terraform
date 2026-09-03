@@ -25,4 +25,6 @@ inputs = {
   keycloak_url      = "https://keycloak.nas.svc.h.mirceanton.com"
   keycloak_username = dependency.truenas.outputs.keycloak_admin_username
   keycloak_password = dependency.truenas.outputs.keycloak_admin_password
+
+  realm_id = "homelab"
 }
