@@ -4,6 +4,14 @@ terraform {
       source  = "registry.terraform.io/keycloak/keycloak"
       version = "5.9.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.9.0"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = "0.14.1"
+    }
   }
 }
 

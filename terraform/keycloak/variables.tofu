@@ -30,6 +30,12 @@ variable "admin_username" {
   type        = string
 }
 
+variable "admin_password_rotation_days" {
+  description = "How often to rotate the realm admin account's password"
+  type        = number
+  default     = 90
+}
+
 variable "admin_realm_management_roles" {
   description = "realm-management client roles (scoped to var.realm_id, not master) granted to the admin account"
   type        = set(string)

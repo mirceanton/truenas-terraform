@@ -4,9 +4,17 @@ resource "keycloak_realm" "this" {
   enabled      = true
 }
 
+resource "time_rotating" "admin_password" {
+  rotation_days = var.admin_password_rotation_days
+}
+
 resource "random_password" "admin" {
   length  = 32
   special = false
+
+  keepers = {
+    rotation = time_rotating.admin_password.id
+  }
 }
 
 resource "keycloak_user" "admin" {
@@ -17,6 +25,13 @@ resource "keycloak_user" "admin" {
   initial_password {
     value     = random_password.admin.result
     temporary = false
+  }
+
+  # keycloak_user only applies initial_password on creation, not on update (the provider
+  # explicitly suppresses that diff) - so a rotated password only takes effect in Keycloak if the
+  # user resource itself is replaced.
+  lifecycle {
+    replace_triggered_by = [random_password.admin]
   }
 }
 
