@@ -80,6 +80,12 @@ variable "keycloak_admin_username" {
   default     = "admin"
 }
 
+variable "keycloak_operator_username" {
+  description = "Keycloak operator (admin-level) username"
+  type        = string
+  default     = "keycloak-operator"
+}
+
 variable "lldap_smtp_username" {
   description = "SMTP username (mailbox address) LLDAP uses to send password-reset emails"
   type        = string

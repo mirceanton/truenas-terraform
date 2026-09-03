@@ -66,6 +66,17 @@ output "keycloak_db_password" {
   sensitive   = true
 }
 
+output "keycloak_operator_username" {
+  description = "Keycloak operator (admin-level) username"
+  value       = var.keycloak_operator_username
+}
+
+output "keycloak_operator_password" {
+  description = "Generated Keycloak operator (admin-level) password"
+  value       = random_password.keycloak_operator.result
+  sensitive   = true
+}
+
 output "lldap_jwt_secret" {
   description = "Generated LLDAP JWT secret"
   value       = random_password.lldap_jwt_secret.result
