@@ -3,9 +3,9 @@ include "root" {
 }
 
 dependency "keycloak" {
-  config_path = find_in_parent_folders("truenas/apps/keycloak/homelab")
+  config_path = find_in_parent_folders("truenas/apps/keycloak/Homelab")
 
-  # infrastructure/truenas/apps/keycloak/homelab may not have been applied with these outputs yet
+  # infrastructure/truenas/apps/keycloak/Homelab may not have been applied with these outputs yet
   # (e.g. a fresh checkout's first `plan`); mock them so `plan` works, but never let `apply` push
   # fake secrets.
   mock_outputs = {
