@@ -15,8 +15,14 @@ variable "keycloak_password" {
 }
 
 variable "realm_id" {
-  description = "Keycloak realm the operator user is created in and scoped to administer. Must already exist."
+  description = "Keycloak realm to create; the operator user is created in it and scoped to administer only it"
   type        = string
+}
+
+variable "realm_display_name" {
+  description = "Display name for var.realm_id"
+  type        = string
+  default     = null
 }
 
 variable "operator_username" {
