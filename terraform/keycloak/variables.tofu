@@ -52,3 +52,25 @@ variable "admin_realm_management_roles" {
     "query-groups",
   ]
 }
+
+variable "ldap_url" {
+  description = "LLDAP LDAP protocol URL to federate var.realm_id's users and groups from"
+  type        = string
+}
+
+variable "ldap_base_dn" {
+  description = "LLDAP base DN"
+  type        = string
+}
+
+variable "ldap_bind_username" {
+  description = "LLDAP user (under ou=people,var.ldap_base_dn) to bind as when querying users/groups"
+  type        = string
+  default     = "admin"
+}
+
+variable "ldap_bind_password" {
+  description = "LLDAP bind user's password"
+  type        = string
+  sensitive   = true
+}
