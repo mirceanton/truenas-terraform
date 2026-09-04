@@ -24,12 +24,17 @@ inputs = {
   lldap_base_dn  = "dc=mirceanton,dc=com"
   lldap_password = dependency.truenas.outputs.lldap_admin_password
 
+  # Login item per user in this vault - see terraform/lldap's `users` variable description for
+  # the exact item shape expected (password field + an "Identity" section with
+  # email/first_name/last_name fields).
+  onepassword_vault_name = "truenas-terraform"
+
   groups = ["k8s-admins", "k8s-viewers", "modelhub-admins", "modelhub-editors"]
 
   users = {
     mirk = {
-      email  = "mircea@mirceanton.com"
-      groups = ["k8s-admins", "modelhub-admins"]
+      onepassword_item_title = "LLDAP User - mirk"
+      groups                 = ["k8s-admins", "modelhub-admins"]
     }
   }
 }
