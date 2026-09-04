@@ -39,5 +39,8 @@ inputs = {
     csoare = {
       onepassword_item_title = "LLDAP User - csoare"
     }
+    cristig = {
+      onepassword_item_title = "LLDAP User - cristig"
+    }
   }
 }
