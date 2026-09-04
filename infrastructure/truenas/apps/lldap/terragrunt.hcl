@@ -27,7 +27,7 @@ inputs = {
   # Login item per user in this vault - see terraform/lldap's `users` variable description for
   # the exact item shape expected (password field + an "Identity" section with
   # email/first_name/last_name fields).
-  onepassword_vault_name = "truenas-terraform"
+  onepassword_vault_name = "Homelab Users"
 
   groups = ["k8s-admins", "k8s-viewers", "modelhub-admins", "modelhub-editors"]
 
