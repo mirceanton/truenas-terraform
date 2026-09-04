@@ -10,6 +10,7 @@ dependency "truenas" {
   mock_outputs = {
     keycloak_admin_username = "admin"
     keycloak_admin_password = "mock-keycloak-admin-password"
+    lldap_admin_password    = "mock-lldap-admin-password"
   }
   mock_outputs_allowed_terraform_commands = ["init", "plan"]
   # infrastructure/truenas's existing state predates these outputs; shallow-merge so the mocks
@@ -31,4 +32,10 @@ inputs = {
   realm_id = basename(get_terragrunt_dir())
 
   admin_username = "keycloak-operator"
+
+  # LLDAP runs as a container alongside keycloak in the same compose stack/network (see
+  # terraform/truenas/files/keycloak/compose.yaml), so keycloak reaches it by container name.
+  ldap_url            = "ldap://lldap:3890"
+  ldap_base_dn        = "dc=mirceanton,dc=com"
+  ldap_bind_password = dependency.truenas.outputs.lldap_admin_password
 }
