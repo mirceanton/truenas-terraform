@@ -36,5 +36,14 @@ inputs = {
       onepassword_item_title = "LLDAP User - mirk"
       groups                 = ["k8s-admins", "modelhub-admins"]
     }
+    csoare = {
+      onepassword_item_title = "LLDAP User - csoare"
+    }
+    cristig = {
+      onepassword_item_title = "LLDAP User - cristig"
+    }
+    bomkii = {
+      onepassword_item_title = "LLDAP User - bomkii"
+    }
   }
 }
