@@ -2,7 +2,7 @@ terraform {
   required_providers {
     lldap = {
       source  = "registry.terraform.io/tasansga/lldap"
-      version = "0.4.2"
+      version = "0.4.3"
     }
     onepassword = {
       source  = "1Password/onepassword"
