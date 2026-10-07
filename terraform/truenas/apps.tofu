@@ -6,7 +6,7 @@ resource "random_password" "traefik_dashboard_admin" {
 resource "truenas_app" "traefik" {
   name       = "traefik"
   custom_app = true
-  compose_config = templatefile("${path.module}/files/traefik/compose.yaml", {
+  custom_compose_config_string = templatefile("${path.module}/files/traefik/compose.yaml", {
     TRAEFIK_CF_DNS_API_TOKEN     = replace(var.traefik_cf_dns_api_token, "$", "$$")
     TRAEFIK_DASHBOARD_BASIC_AUTH = replace("${var.traefik_dashboard_username}:${random_password.traefik_dashboard_admin.bcrypt_hash}", "$", "$$")
   })
@@ -20,7 +20,7 @@ resource "random_password" "dozzle_admin" {
 resource "truenas_app" "dozzle" {
   name       = "dozzle"
   custom_app = true
-  compose_config = templatefile("${path.module}/files/dozzle/compose.yaml", {
+  custom_compose_config_string = templatefile("${path.module}/files/dozzle/compose.yaml", {
     DOZZLE_ADMIN_USERNAME = replace(var.dozzle_admin_username, "$", "$$")
     DOZZLE_ADMIN_PASSWORD = replace(random_password.dozzle_admin.bcrypt_hash, "$", "$$")
   })
@@ -28,9 +28,9 @@ resource "truenas_app" "dozzle" {
 }
 
 resource "truenas_app" "exporters" {
-  name           = "exporters"
-  custom_app     = true
-  compose_config = file("${path.module}/files/exporters/compose.yaml")
+  name                         = "exporters"
+  custom_app                   = true
+  custom_compose_config_string = file("${path.module}/files/exporters/compose.yaml")
 }
 
 resource "random_id" "garage_rpc_secret" {
@@ -50,7 +50,7 @@ resource "random_password" "garage_webui_admin" {
 resource "truenas_app" "garage" {
   name       = "garage"
   custom_app = true
-  compose_config = templatefile("${path.module}/files/garage/compose.yml", {
+  custom_compose_config_string = templatefile("${path.module}/files/garage/compose.yml", {
     garage_config = join("\n", [
       for i, line in split("\n", trimsuffix(file("${path.module}/files/garage/garage.toml"), "\n")) :
       i == 0 || line == "" ? line : "            ${line}"
@@ -85,7 +85,7 @@ resource "random_password" "lldap_admin" {
 resource "truenas_app" "keycloak" {
   name       = "keycloak"
   custom_app = true
-  compose_config = templatefile("${path.module}/files/keycloak/compose.yaml", {
+  custom_compose_config_string = templatefile("${path.module}/files/keycloak/compose.yaml", {
     KEYCLOAK_ADMIN_USERNAME = replace(var.keycloak_admin_username, "$", "$$")
     KEYCLOAK_ADMIN_PASSWORD = replace(random_password.keycloak_admin.result, "$", "$$")
     KEYCLOAK_DB_PASSWORD    = replace(random_password.keycloak_db.result, "$", "$$")
@@ -98,10 +98,10 @@ resource "truenas_app" "keycloak" {
 }
 
 resource "truenas_app" "nexus" {
-  name           = "registry"
-  custom_app     = true
-  compose_config = file("${path.module}/files/registry/compose.yaml")
-  depends_on     = [truenas_app.traefik]
+  name                         = "registry"
+  custom_app                   = true
+  custom_compose_config_string = file("${path.module}/files/registry/compose.yaml")
+  depends_on                   = [truenas_app.traefik]
 }
 
 resource "random_password" "zot_admin" {
@@ -112,7 +112,7 @@ resource "random_password" "zot_admin" {
 resource "truenas_app" "zot" {
   name       = "zot"
   custom_app = true
-  compose_config = templatefile("${path.module}/files/zot/compose.yaml", {
+  custom_compose_config_string = templatefile("${path.module}/files/zot/compose.yaml", {
     zot_config = join("\n", [
       for i, line in split("\n", trimsuffix(file("${path.module}/files/zot/config.json"), "\n")) :
       i == 0 || line == "" ? line : "      ${line}"

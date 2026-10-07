@@ -32,8 +32,11 @@ Two top-level trees implement a standard Terragrunt module/live split:
 
 - **`terraform/`** — reusable OpenTofu modules. Modules define providers and input variables only; they contain no
   environment-specific values. `terraform/truenas` configures the
-  [`deevus/truenas`](https://registry.terraform.io/providers/deevus/truenas) provider, authenticating over SSH
-  (host, port, user, private key path, host key fingerprint — all passed in as variables).
+  [`truenas/truenas`](https://registry.terraform.io/providers/truenas/truenas) provider (the official
+  first-party one), authenticating with an API key over the TrueNAS WebSocket API
+  (`wss://<host>/api/current`) — no SSH transport. Pools are read as data sources; datasets, ZVOLs, snapshot and
+  scrub tasks, SMB/NFS/iSCSI shares and cloud sync tasks are managed as resources and were adopted from the
+  existing NAS configuration with the import blocks in `terraform/truenas/imports.tofu`.
 - **`infrastructure/`** — Terragrunt "units": live configurations that wire a module from `terraform/` to real
   values and remote state. `infrastructure/truenas` deploys the TrueNAS apps, `infrastructure/truenas/apps/*`
   configures those apps' own APIs (Garage buckets/keys, LLDAP users/groups), and `infrastructure/1password/*`
@@ -48,7 +51,7 @@ layout. Terragrunt generates `backend.tf` per unit from this config (overwriting
 
 App credentials (admin passwords, API tokens, JWT secrets, etc.) are generated in `terraform/truenas` with
 `random_password`/`random_id` resources — not sourced from 1Password. Only genuinely external credentials
-(the TrueNAS SSH key, Backblaze/Cloudflare API tokens, the LLDAP SMTP mailbox password) still flow in via
+(the TrueNAS API key, Backblaze/Cloudflare API tokens, the LLDAP SMTP mailbox password) still flow in via
 `.env.1pass` and `TF_VAR_*` env vars. Generated credentials are exposed as outputs and flow *out* to 1Password
 via the `infrastructure/1password/*` units, which use the
 [`terraform-modules-1password`](https://github.com/mirceanton/terraform-modules-1password) module (same pattern

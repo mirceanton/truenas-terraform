@@ -8,173 +8,57 @@ locals {
     month  = "*"
     dow    = "*"
   }
+
+  # `id` is the live cloud sync task id, used only by the import blocks in
+  # imports.tofu; `description` is both the map key and the task description
+  # (cloud sync tasks have no separate name field).
+  cloud_sync_tasks = {
+    "B2 - Users - Mircea"         = { id = 10, path = "/mnt/tank/Users/mircea", folder = "/Users/mircea" }
+    "B2 - Users - Bianca"         = { id = 11, path = "/mnt/tank/Users/bianca", folder = "/Users/bianca" }
+    "B2 - Projects - mirceanton"  = { id = 12, path = "/mnt/tank/Projects/mirceanton", folder = "/Projects/mirceanton" }
+    "B2 - Projects - bomkii"      = { id = 13, path = "/mnt/tank/Projects/bomkii", folder = "/Projects/bomkii" }
+    "B2 - Projects - BehindGates" = { id = 14, path = "/mnt/tank/Projects/BehindGates", folder = "/Projects/BehindGates" }
+    "B2 - Apps" = {
+      id       = 17
+      path     = "/mnt/tank/Apps"
+      folder   = "/Apps"
+      snapshot = false
+      exclude  = ["Torrent_Downloads"]
+    }
+  }
 }
 
-resource "truenas_cloudsync_task" "users_mircea" {
-  description   = "B2 - Users - Mircea"
-  path          = "/mnt/tank/Users/mircea"
-  credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "push"
-  transfer_mode = "sync"
+# Attribute names and enum casing both changed with the official provider:
+# the B2 bucket/folder moved from a `b2 { … }` block into the `attributes` JSON
+# document, `direction`/`transfer_mode` are UPPERCASE, `credentials` is already
+# a number (no tonumber()), and the client-side encryption settings became a
+# flat boolean plus write-only `encryption_password`/`encryption_salt`.
+resource "truenas_cloudsync_task" "this" {
+  for_each = local.cloud_sync_tasks
+
+  description   = each.key
+  path          = each.value.path
+  credentials   = truenas_cloudsync_credentials.backblaze_b2.id
+  direction     = "PUSH"
+  transfer_mode = "SYNC"
   transfers     = 16
-  snapshot      = true
+  snapshot      = try(each.value.snapshot, true)
+  exclude       = try(each.value.exclude, null)
 
-  b2 {
+  attributes = jsonencode({
     bucket = local.b2_backup_bucket
-    folder = "/Users/mircea"
-  }
+    folder = each.value.folder
+  })
 
-  schedule {
+  encryption          = true
+  encryption_password = var.b2_backup_encryption_password
+  encryption_salt     = var.b2_backup_encryption_salt
+
+  schedule = {
     minute = local.b2_backup_schedule.minute
     hour   = local.b2_backup_schedule.hour
     dom    = local.b2_backup_schedule.dom
     month  = local.b2_backup_schedule.month
     dow    = local.b2_backup_schedule.dow
-  }
-
-  encryption {
-    password = var.b2_backup_encryption_password
-    salt     = var.b2_backup_encryption_salt
-  }
-}
-
-resource "truenas_cloudsync_task" "users_bianca" {
-  description   = "B2 - Users - Bianca"
-  path          = "/mnt/tank/Users/bianca"
-  credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "push"
-  transfer_mode = "sync"
-  transfers     = 16
-  snapshot      = true
-
-  b2 {
-    bucket = local.b2_backup_bucket
-    folder = "/Users/bianca"
-  }
-
-  schedule {
-    minute = local.b2_backup_schedule.minute
-    hour   = local.b2_backup_schedule.hour
-    dom    = local.b2_backup_schedule.dom
-    month  = local.b2_backup_schedule.month
-    dow    = local.b2_backup_schedule.dow
-  }
-
-  encryption {
-    password = var.b2_backup_encryption_password
-    salt     = var.b2_backup_encryption_salt
-  }
-}
-
-resource "truenas_cloudsync_task" "projects_mirceanton" {
-  description   = "B2 - Projects - mirceanton"
-  path          = "/mnt/tank/Projects/mirceanton"
-  credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "push"
-  transfer_mode = "sync"
-  transfers     = 16
-  snapshot      = true
-
-  b2 {
-    bucket = local.b2_backup_bucket
-    folder = "/Projects/mirceanton"
-  }
-
-  schedule {
-    minute = local.b2_backup_schedule.minute
-    hour   = local.b2_backup_schedule.hour
-    dom    = local.b2_backup_schedule.dom
-    month  = local.b2_backup_schedule.month
-    dow    = local.b2_backup_schedule.dow
-  }
-
-  encryption {
-    password = var.b2_backup_encryption_password
-    salt     = var.b2_backup_encryption_salt
-  }
-}
-
-resource "truenas_cloudsync_task" "projects_bomkii" {
-  description   = "B2 - Projects - bomkii"
-  path          = "/mnt/tank/Projects/bomkii"
-  credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "push"
-  transfer_mode = "sync"
-  transfers     = 16
-  snapshot      = true
-
-  b2 {
-    bucket = local.b2_backup_bucket
-    folder = "/Projects/bomkii"
-  }
-
-  schedule {
-    minute = local.b2_backup_schedule.minute
-    hour   = local.b2_backup_schedule.hour
-    dom    = local.b2_backup_schedule.dom
-    month  = local.b2_backup_schedule.month
-    dow    = local.b2_backup_schedule.dow
-  }
-
-  encryption {
-    password = var.b2_backup_encryption_password
-    salt     = var.b2_backup_encryption_salt
-  }
-}
-
-resource "truenas_cloudsync_task" "projects_behindgates" {
-  description   = "B2 - Projects - BehindGates"
-  path          = "/mnt/tank/Projects/BehindGates"
-  credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "push"
-  transfer_mode = "sync"
-  transfers     = 16
-  snapshot      = true
-
-  b2 {
-    bucket = local.b2_backup_bucket
-    folder = "/Projects/BehindGates"
-  }
-
-  schedule {
-    minute = local.b2_backup_schedule.minute
-    hour   = local.b2_backup_schedule.hour
-    dom    = local.b2_backup_schedule.dom
-    month  = local.b2_backup_schedule.month
-    dow    = local.b2_backup_schedule.dow
-  }
-
-  encryption {
-    password = var.b2_backup_encryption_password
-    salt     = var.b2_backup_encryption_salt
-  }
-}
-
-resource "truenas_cloudsync_task" "apps" {
-  description   = "B2 - Apps"
-  path          = "/mnt/tank/Apps"
-  credentials   = tonumber(truenas_cloudsync_credentials.backblaze_b2.id)
-  direction     = "push"
-  transfer_mode = "sync"
-  transfers     = 16
-  snapshot      = false
-  exclude       = ["Torrent_Downloads"]
-
-  b2 {
-    bucket = local.b2_backup_bucket
-    folder = "/Apps"
-  }
-
-  schedule {
-    minute = local.b2_backup_schedule.minute
-    hour   = local.b2_backup_schedule.hour
-    dom    = local.b2_backup_schedule.dom
-    month  = local.b2_backup_schedule.month
-    dow    = local.b2_backup_schedule.dow
-  }
-
-  encryption {
-    password = var.b2_backup_encryption_password
-    salt     = var.b2_backup_encryption_salt
   }
 }
