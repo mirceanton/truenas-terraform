@@ -32,6 +32,7 @@ services:
             - traefik.http.services.garage-admin.loadbalancer.server.port=3903
         networks:
             - traefik_network
+        restart: unless-stopped
         volumes:
             - /mnt/tank/Apps/Garage/meta:/var/lib/garage/meta
             - /mnt/tank/Apps/Garage/data:/var/lib/garage/data
