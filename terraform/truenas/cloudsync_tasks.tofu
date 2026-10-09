@@ -45,9 +45,16 @@ resource "truenas_cloudsync_task" "this" {
   snapshot      = try(each.value.snapshot, true)
   exclude       = try(each.value.exclude, null)
 
+  # `attributes` is sent verbatim and compared verbatim against what the API
+  # returns. TrueNAS persists the B2 provider's own defaults alongside what is
+  # sent (chunk_size 96 MiB, fast_list off) - every live task carries them - so
+  # they are declared here too. Without them the first plan after the import
+  # re-proposes all six tasks just to drop the two API-added keys.
   attributes = jsonencode({
-    bucket = local.b2_backup_bucket
-    folder = each.value.folder
+    bucket     = local.b2_backup_bucket
+    chunk_size = 96
+    fast_list  = false
+    folder     = each.value.folder
   })
 
   encryption          = true
