@@ -33,11 +33,14 @@ Two top-level trees implement a standard Terragrunt module/live split:
 - **`terraform/`** — reusable OpenTofu modules. Modules define providers and input variables only; they contain no
   environment-specific values. `terraform/truenas` configures the
   [`deevus/truenas`](https://registry.terraform.io/providers/deevus/truenas) provider, authenticating over SSH
-  (host, port, user, private key path, host key fingerprint — all passed in as variables).
+  (host, port, user, private key path, host key fingerprint — all passed in as variables). `terraform/nexus` configures
+  the Nexus Repository Manager instance behind the `registry` app through the
+  [`sonatyperepo`](https://registry.terraform.io/providers/sonatype-nexus-community/sonatyperepo) provider —
+  currently its Docker pull-through (proxy) repositories.
 - **`infrastructure/`** — Terragrunt "units": live configurations that wire a module from `terraform/` to real
   values and remote state. `infrastructure/truenas` deploys the TrueNAS apps, `infrastructure/truenas/apps/*`
-  configures those apps' own APIs (Garage buckets/keys, LLDAP users/groups), and `infrastructure/1password/*`
-  pushes app credentials into 1Password.
+  configures those apps' own APIs (Garage buckets/keys, LLDAP users/groups, Nexus docker proxy repositories), and
+  `infrastructure/1password/*` pushes app credentials into 1Password.
 
 `root.hcl` is the Terragrunt root config included by every unit. It defines the remote state backend: an
 S3-compatible bucket hosted on Backblaze B2 (`tfstate-truenas-terraform`). The state key is derived from each
@@ -48,8 +51,8 @@ layout. Terragrunt generates `backend.tf` per unit from this config (overwriting
 
 App credentials (admin passwords, API tokens, JWT secrets, etc.) are generated in `terraform/truenas` with
 `random_password`/`random_id` resources — not sourced from 1Password. Only genuinely external credentials
-(the TrueNAS SSH key, Backblaze/Cloudflare API tokens, the LLDAP SMTP mailbox password) still flow in via
-`.env.1pass` and `TF_VAR_*` env vars. Generated credentials are exposed as outputs and flow *out* to 1Password
+(the TrueNAS SSH key, Backblaze/Cloudflare API tokens, the LLDAP SMTP mailbox password, the Nexus admin password)
+still flow in via `.env.1pass` and `TF_VAR_*` env vars. Generated credentials are exposed as outputs and flow *out* to 1Password
 via the `infrastructure/1password/*` units, which use the
 [`terraform-modules-1password`](https://github.com/mirceanton/terraform-modules-1password) module (same pattern
 as `mikrotik-terraform`) to create/update items in a vault named after the unit's directory. Units that need a
