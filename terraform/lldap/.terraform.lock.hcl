@@ -24,22 +24,22 @@ provider "registry.opentofu.org/1password/onepassword" {
 }
 
 provider "registry.terraform.io/tasansga/lldap" {
-  version     = "0.4.4"
-  constraints = "0.4.4"
+  version     = "0.4.5"
+  constraints = "0.4.5"
   hashes = [
-    "h1:2AJHkJFoRiwQpJm7yy8GaClgshTRu/ltzDeTIxPMZdE=",
-    "h1:8oRQFWgNjQ2YQfydjYJLrt7oyBgkB+3x89VvXaVJCdM=",
-    "h1:Ey45fyBfTU38xM6GB3v/7pjumtaLQxt0ZoPmlH3NDY8=",
-    "h1:FqHReTtmLmFsL/QB4HddRv1Pz4vcAhqOGUJPbk35OJs=",
-    "h1:SDHuhI6c6qbimQpPNzD73JgrQY3UtyQDI7ZOYdgtGDc=",
-    "h1:qOUMqlHZQlOwxk3WIIVujL9uGhnd0V79B0aFSQm8hzw=",
-    "h1:u6dXYkvBdXyWS7+EF38z8fWh0yeKdYzRrdsc1QrghXc=",
-    "zh:012b12d19195ca1786abd249eb867bbdb08459ef4bdce00309c720700790ac8d",
-    "zh:1ceac84778fe17c7911902f5de974d2084e711977db0ae8347822b2a03fba671",
-    "zh:274aaa46e5347dfa8f459c85071f7d814b8b8ba8e96284c44a2d9d9324685b80",
-    "zh:4a7a0b728df5d541b0912a89eda31bcd635cd338ee6a4374bc2795bcb1bf9e39",
-    "zh:4ce22c363d7924c4438ac555101fa2e982e71bb74c92ed337f96bd18a57365ec",
-    "zh:5d7bbba8ce7458fcf77c0f01c44bd62351a83649c1a5193f90126df01653dbb6",
-    "zh:fdfd99c28419af65f1e33a8e18c3b449a90d1e145b438979e449aec06ae9bfbf",
+    "h1:3DopxxUFoXSauO2qUfTR+PI5F23WRdWhUBIIqt9Djlo=",
+    "h1:9Iiun3MSl1FqlTM00Za52e6kjDsImJvUMOjsA2nPh+w=",
+    "h1:CCoPJbvlq0pePx8BTxl2hqNeOr31BmDg7cwvSIlrlms=",
+    "h1:Qxt/wFh7VHneZZIKIJYRL7N+JGh2UfH7MyzLTrXh4N8=",
+    "h1:bLfuR4U41ShzeXv1kHTrS0UAIgVAI3ycm5SRsnzjyS8=",
+    "h1:pRmKwQoliYdK7YdPqTT+TxkFMVKvOy4F4JTrQ7C+1oY=",
+    "h1:xqgAw51ii/BckA9itXpOfT4smS9oAiVMMi97PTxbUlE=",
+    "zh:191b86bf1da6892e485463ac73f5c5faa41379ce2ba51a146e964078823c7ffe",
+    "zh:1e643829905229317b67884c650f8263a08c492d818ffda9312a520d1b0198fe",
+    "zh:2b87497138db19441fac47c9201a0171363de2bfb2172fd19bb67baa8af5c7f8",
+    "zh:3f95a7f615e7ea315ef18d92b8901528de9eb396939b5df7cb3af9fd535ea521",
+    "zh:49f5c1bcc1c4987fa4caaf4e7e33e34e4d05ef5a4cec36f7f863dbd1bbfbdcad",
+    "zh:ad156e5e5fb24822286e80165539caf0a1e6d91ca78bf7372859bed80d38ee4a",
+    "zh:bf27a95cc1f402423c0f3674bc5ed35c006763a6962498644045b12377cea559",
   ]
 }
