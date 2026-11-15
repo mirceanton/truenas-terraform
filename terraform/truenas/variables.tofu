@@ -1,29 +1,18 @@
-variable "truenas_host" {
-  description = "TrueNAS server hostname or IP address"
+variable "truenas_endpoint" {
+  description = "TrueNAS WebSocket API endpoint, e.g. wss://nas.example.com/api/current"
   type        = string
 }
 
-variable "ssh_port" {
-  description = "SSH port"
-  type        = number
-  default     = 22
-}
-
-variable "ssh_user" {
-  description = "SSH username"
-  type        = string
-  default     = "terraform"
-}
-
-variable "ssh_private_key" {
-  description = "SSH private key contents"
+variable "truenas_api_key" {
+  description = "TrueNAS API key used by the truenas provider (created in the UI under Settings > API Keys)"
   type        = string
   sensitive   = true
 }
 
-variable "ssh_host_key_fingerprint" {
-  description = "SHA256 fingerprint of the TrueNAS server SSH host key"
-  type        = string
+variable "truenas_insecure_tls" {
+  description = "Skip TLS certificate verification against the TrueNAS endpoint (the NAS serves its own UI certificate)"
+  type        = bool
+  default     = true
 }
 
 variable "b2_backup_account" {

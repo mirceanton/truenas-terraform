@@ -7,10 +7,9 @@ terraform {
 }
 
 inputs = {
-  truenas_host                  = "nas.mgmt.h.mirceanton.com"
-  ssh_user                      = "terraform"
-  ssh_private_key               = get_env("TF_VAR_ssh_private_key")
-  ssh_host_key_fingerprint      = get_env("TF_VAR_ssh_host_key_fingerprint")
+  truenas_endpoint = "wss://nas.mgmt.h.mirceanton.com/api/current"
+  truenas_api_key  = get_env("TF_VAR_truenas_api_key")
+
   b2_backup_account             = get_env("TF_VAR_b2_backup_account")
   b2_backup_key                 = get_env("TF_VAR_b2_backup_key")
   b2_backup_encryption_password = get_env("TF_VAR_b2_backup_encryption_password")
