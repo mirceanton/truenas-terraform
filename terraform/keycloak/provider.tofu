@@ -2,7 +2,7 @@ terraform {
   required_providers {
     keycloak = {
       source  = "registry.terraform.io/keycloak/keycloak"
-      version = "5.10.0"
+      version = "5.11.0"
     }
     random = {
       source  = "hashicorp/random"
